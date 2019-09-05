@@ -19,7 +19,7 @@ function say(name) {
 // console.log(global);
 // console.log(module);
 
-const log = require('./logger');
+// const log = require('./logger');
 // logger.log('message');
 // log('message')
 
@@ -63,11 +63,46 @@ const emitter = new EventEmitter();
 // register listener
 // on = addListener
 // with on we start game with emit we execute game
-emitter.on('messageLogged', () => {
-  console.log('listener called')
-})
-emitter.emit('messageLogged');
 
+// emitter.on('messageLogged', (eventArg) => {
+//   console.log('listener called', eventArg);
+// })
+
+// also we want send data up about that events.
+// event arguments is those data we raise up with our events
+// event name , id , data
+// emitter.emit('messageLogged', {
+//   id: 1,
+//   url: 'http'
+// });  it go to logger.
+
+const Logger = require('./logger');
+const logger = new Logger();
+// now we register listener = on , on this new obj logger.
+logger.on('messageLogged', (eventArg) => {
+  console.log('listener called', eventArg);
+})
+// logger.log('message');
+
+// http modules for creating networking applications.
+const http = require('http');
+// this server also is event emitter inside and have all capabilities
+// http server come from net.server 
+const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.write('hellp workd');
+    res.end();
+  } 
+  if (req.url === '/api') {
+    res.write(JSON.stringify([1,2,3]));
+    res.end();
+  } 
+});
+// server.on('connection', (socket) => {
+//   console.log('new Connection')
+// });
+server.listen(3000);
+console.log('listening on port 3000')
 
 
 
